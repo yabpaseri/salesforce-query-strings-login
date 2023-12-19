@@ -1,8 +1,9 @@
 import { LoginData } from '../types';
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	// 送られたその瞬間、service_workerは役目を終えるので、ここで返してOK
 	sendResponse(true);
-	const EXTENSION_ORIGIN = `chrome-extension://${chrome.runtime.id}`;
+	const EXTENSION_ORIGIN = new URL(chrome.runtime.getURL('')).origin;
 	if (EXTENSION_ORIGIN !== sender.origin) return;
 	const data: LoginData = message;
 
