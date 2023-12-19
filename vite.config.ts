@@ -7,7 +7,7 @@ import archive from './plugins/vite-plugin-archive';
 const version = version_name.replace(/[^\d.-]+/g, '').replace('-', '.');
 const manifest = defineManifest(({ mode }) => ({
 	manifest_version: 3,
-	name: 'Web Extension Base',
+	name: 'Salesforce Query Strings Login',
 	author,
 	description,
 	version,
@@ -18,7 +18,19 @@ const manifest = defineManifest(({ mode }) => ({
 		'48': 'icons/icon48.png',
 		'128': 'icons/icon128.png',
 	},
-	action: { default_popup: 'index.html' },
+	permissions: ['webRequest', 'webNavigation'],
+	host_permissions: ['https://*.salesforce.com/*'],
+	background: {
+		service_worker: 'src/background/main.ts',
+		type: 'module',
+	},
+	content_scripts: [
+		{
+			js: ['src/content/main.ts'],
+			matches: ['https://*.salesforce.com/*'],
+			run_at: 'document_start',
+		},
+	],
 }));
 
 // https://vitejs.dev/config/
