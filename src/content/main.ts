@@ -1,11 +1,15 @@
 import { LoginData } from '../types';
 
+const print = console.log.bind(console, '%c SALESFORCE_QUERY_STRINGS_LOGIN %c', 'background-color:#92D1EA;', '');
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	// 送られたその瞬間、service_workerは役目を終えるので、ここで返してOK
 	sendResponse(true);
+	print('Received message from service-worker.');
 	const EXTENSION_ORIGIN = new URL(chrome.runtime.getURL('')).origin;
 	if (EXTENSION_ORIGIN !== sender.origin) return;
 	const data: LoginData = message;
+	print(`LoginData = ${JSON.stringify({ ...data, pw: '*'.repeat(data.pw.length) })}`);
 
 	const useNewIdentity = document.getElementById('use_new_identity');
 	if (useNewIdentity && useNewIdentity.checkVisibility()) {
@@ -19,5 +23,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 	unInput.value = data.un;
 	pwInput.value = data.pw;
-	loginButton?.click();
+	if (loginButton) {
+		loginButton.click();
+	} else {
+		print('Login button not found.');
+	}
 });

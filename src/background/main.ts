@@ -17,7 +17,7 @@ chrome.webNavigation.onBeforeNavigate.addListener((details) => {
 	if (!(details.frameId === 0 && details.parentFrameId === -1 && details.frameType === 'outermost_frame')) return;
 	// タブに未送信の情報を削除する
 	if (sendQueue.delete(details.tabId)) {
-		console.log('[webNavigation.onBeforeNavigate]', `Deleted "${details.tabId}" from sendQueue`);
+		console.log('[webNavigation.onBeforeNavigate]', `Deleted from sendQueue(${details.tabId})`);
 	}
 });
 
@@ -33,7 +33,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 		const requestId = details.requestId;
 		const data = { un, pw };
 		requestedMap.set(requestId, data);
-		console.log('[webRequest.onBeforeRequest]', `Added {${requestId}: ${dataToMaskedStr(data)}} to requestedMap`);
+		console.log('[webRequest.onBeforeRequest]', `Added to requestedMap(${requestId}): ${dataToMaskedStr(data)}`);
 	},
 	{ urls: SALESFORCE_URLS },
 );
@@ -48,7 +48,7 @@ chrome.webRequest.onCompleted.addListener(
 		// sendQueueにデータを移して、DOMへの送信待機
 		sendQueue.set(details.tabId, data);
 		requestedMap.delete(requestId);
-		console.log('[webRequest.onCompleted]', `Move to sendQueue from requested: ${dataToMaskedStr(data)}`);
+		console.log('[webRequest.onCompleted]', `Move to sendQueue(${details.tabId}) from requested(${requestId}): ${dataToMaskedStr(data)}`);
 	},
 	{ urls: SALESFORCE_URLS },
 );
