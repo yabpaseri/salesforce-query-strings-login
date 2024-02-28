@@ -1,3 +1,6 @@
+**:warning:It is currently maintained in the following repository.**  
+**:link:[@yabpaseri/login-to-salesforce-by-query](https://github.com/yabpaseri/login-to-salesforce-by-query)**
+
 # Salesforce Query Strings Login
 
 When accessing a URL that contains account information in the query - the extension remembers the login information and fills in the login screen.
